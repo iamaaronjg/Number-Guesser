@@ -10,8 +10,8 @@ GAME FUNCTION:
 // Game values
 let min = 1,
     max = 10,
-    winningNum = 2,
-    guessesLeft = 3;
+    winningNum = getRandomNum(min, max),
+    guessesLeft = 5;
 
 // UI Elements
 const game = document.querySelector('#game'),
@@ -24,6 +24,13 @@ const game = document.querySelector('#game'),
 // Assign UI min and max values (initially placed in the HTML spans but removed after assignment)
 minNum.textContent = min;
 maxNum.textContent = max;
+
+// Play again event listener (using event delegation to target parent element)
+game.addEventListener('mousedown', function(e) { // Using 'click' event is activated automatically for a click, which we don't want
+    if (e.target.className === 'play-again') {
+        window.location.reload(); // Reload web page
+    }
+});
 
 // Listen for guess
 guessBtn.addEventListener('click', function() {
@@ -75,10 +82,26 @@ function gameOver(won, msg) {
 
     // Display winning message
     setMessage(msg);
+
+    // Play again?
+    guessBtn.value = 'Play Again';
+    guessBtn.className += 'play-again';
+}
+
+// Generate winning number
+function getRandomNum(min, max) {
+    console.log(Math.floor(Math.random() * (max - min + 1) + min));
 }
 
 // Set message
 function setMessage(msg, color) {
     message.style.color = color;
     message.textContent = msg;
+
+    setTimeout(clearMessage, 5000);
 };
+
+// Clear message function
+function clearMessage() {
+    message.style.display = 'none';
+}
